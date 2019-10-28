@@ -30,12 +30,12 @@ mongoose.connect("mongodb://localhost/articlescraper", { useNewUrlParser: true, 
 // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
-  axios.get("http://https://nmstatesports.com//").then(function(response) {
+  axios.get("https://www.espn.com").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
-    // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function(i, element) {
+    
+    $("article h1").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
@@ -63,7 +63,7 @@ console.log(result)
     });
 
     // Send a message to the client
-    res.json(response);
+    res.send("Scrape Complete");
   });
 });
 
@@ -83,7 +83,7 @@ app.get("/articles", function(req, res) {
 
 
 // Route for grabbing a specific Article by id, populate it with it's note
-app.get("/articles/:id", function(req, res) {
+app.get("/articles", function(req, res) {
   db.Article.findOne({ _id: req.params.id })
     .populate("note")
     .then(function(dbArticle) {
